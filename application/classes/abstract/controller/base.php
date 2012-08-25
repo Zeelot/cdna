@@ -24,6 +24,12 @@ abstract class Abstract_Controller_Base extends Controller {
 	 */
 	protected $_filters = array();
 
+	/**
+	 * This is the authenticated user or a blank Model_User object.
+	 * @var Model_User
+	 */
+	protected $_user;
+
 	public function before()
 	{
 		try
@@ -38,6 +44,8 @@ abstract class Abstract_Controller_Base extends Controller {
 			 */
 			$this->_view = NULL;
 		}
+
+		$this->_user = ORM::factory('user', Cookie::get('auth'));
 	}
 
 	/**

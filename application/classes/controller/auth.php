@@ -4,6 +4,9 @@ class Controller_Auth extends Abstract_Controller_Page {
 
 	public function action_login()
 	{
+		if ($this->_user->loaded())
+			$this->request->redirect(Route::url('home'));
+
 		$config = Kohana::$config->load('oauth')->github;
 
 		if ($this->request->query('code'))
@@ -24,11 +27,10 @@ class Controller_Auth extends Abstract_Controller_Page {
 			$data = json_decode($response->body(), TRUE);
 
 			// Create a user from github
-			$user = ORM::factory('user')
-				->create_from_github($data['access_token']);
+			$this->_user->create_from_github($data['access_token']);
 
 			// Log the user in
-			Cookie::set('auth', $user->id);
+			Cookie::set('auth', $this->_user->id);
 
 			// Send the user back home
 			$this->request->redirect(Route::url('home'));
@@ -47,6 +49,9 @@ class Controller_Auth extends Abstract_Controller_Page {
 
 	public function action_logout()
 	{
+		Cookie::delete('auth');
 
+		// Send the user back home
+		$this->request->redirect(Route::url('home'));
 	}
 }

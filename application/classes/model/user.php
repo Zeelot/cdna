@@ -4,20 +4,18 @@ class Model_User extends ORM {
 
 	public function create_from_github($access_token)
 	{
+		$this->access_token = $access_token;
 		$config = Kohana::$config->load('oauth')->github;
+		$github = new GitHub($this, $config);
 
-		$query = array(
-			'access_token' => $access_token,
-		);
-
-		$request = Request::factory($config['api_url'].'user')
-			->query($query);
+		$request = $github->request(HTTP_Request::GET, '/user');
 
 		$response = $request->execute();
 		$body = json_decode($response->body(), TRUE);
 
 		$data = array(
 			'github_id'    => $body['id'],
+			'github_login' => $body['login'],
 			'name'         => $body['name'],
 			'email'        => $body['email'],
 			'access_token' => $access_token,
