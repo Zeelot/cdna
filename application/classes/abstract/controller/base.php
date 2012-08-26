@@ -30,6 +30,9 @@ abstract class Abstract_Controller_Base extends Controller {
 	 */
 	protected $_user;
 
+	// GitHub API instance
+	protected $_github;
+
 	public function before()
 	{
 		try
@@ -46,6 +49,7 @@ abstract class Abstract_Controller_Base extends Controller {
 		}
 
 		$this->_user = ORM::factory('user', Cookie::get('auth'));
+		$this->_github = new GitHub($this->_user, Kohana::$config->load('oauth')->github);
 	}
 
 	/**
@@ -64,7 +68,9 @@ abstract class Abstract_Controller_Base extends Controller {
 				// For populating forms
 				->set('_values', $this->_values)
 				// For filtering results
-				->set('_filters', $this->_filters);
+				->set('_filters', $this->_filters)
+				->set('_user', $this->_user)
+				->set('_github', $this->_github);
 
 			$this->response->body($this->_view->render());
 		}

@@ -28,7 +28,13 @@ Route::set('repos', 'repos')
 		'action'     => 'list',
 	));
 
-Route::set('repos-play', 'repos/<repo>')
+Route::set('repos-create', 'repos/create')
+	->defaults(array(
+		'controller' => 'repos',
+		'action'     => 'create',
+	));
+
+Route::set('repos-play', 'repos/play/<repo>')
 	->defaults(array(
 		'controller' => 'repos',
 		'action'     => 'play',

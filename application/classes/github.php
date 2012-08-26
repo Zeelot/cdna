@@ -21,10 +21,12 @@ class GitHub {
 
 	public function request($method, $uri, array $query = NULL, array $post = NULL, array $body = NULL)
 	{
+		$uri = trim($uri, '/');
+
 		// Create the full URL to  the GitHub API
 		$url = (strpos($uri, '://') !== FALSE)
 			? $uri
-			: $this->_config['api_url'].trim($uri. '/');
+			: $this->_config['api_url'].$uri;
 
 		// Replace :user in URL
 		$url = str_replace(':user', $this->_user->github_login, $url);
@@ -36,7 +38,8 @@ class GitHub {
 		// Use the access_token from the user model
 		$query['access_token'] = $this->_user->access_token;
 
-		return Request::factory($this->_config['api_url'].trim($uri, '/'))
+		return Request::factory($url)
+			->headers('accept', 'application/json')
 			->query($query)
 			->post($post)
 			->method($method);

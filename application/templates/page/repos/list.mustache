@@ -1,0 +1,16 @@
+<h1>Repositories</h1>
+<ul class="repository-list">
+	{{#repo_list}}
+	<li>
+		<div class="name">{{name}}</div>
+		<div class="action">
+			{{#has_dna}}<a href="{{play_url}}">Play!</a>{{/has_dna}}
+			{{^has_dna}}{{{play_form}}}{{/has_dna}}
+		</div>
+	</li>
+	{{/repo_list}}
+	{{^repo_list}}
+	<li>Sorry, it doesn't look like you have any repositories on GitHub :(</li>
+	{{/repo_list}}
+
+</ul>
